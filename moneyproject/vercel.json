@@ -2,8 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "moneyproject/wsgi.py",
-      "use": "@vercel/python"
+      "src": "build.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "staticfiles"
+      }
     }
   ],
   "routes": [
