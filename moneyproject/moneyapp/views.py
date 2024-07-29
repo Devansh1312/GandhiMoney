@@ -1,9 +1,9 @@
-from django.views import views
+from django import views
 from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
 
-class PaymentType(views.view):
+class PaymentType(views.View):
     form_class = PaymentTypeForm
     
     def get(self, request):
