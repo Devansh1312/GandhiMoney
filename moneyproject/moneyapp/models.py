@@ -9,7 +9,7 @@ from django.conf import settings
     
 
 
-    
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, user_name, email, mobile_number, password=None, **extra_fields):
         if not email:
@@ -133,7 +133,7 @@ class Balance(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     payment_mode = models.ForeignKey(PaymentType,on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    money=models.IntegerChoices()
+    money=models.IntegerField()
 
     def __str__(self):
         return self.name
@@ -142,7 +142,7 @@ class Credit(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     payment_mode = models.ForeignKey(PaymentType,on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    money=models.IntegerChoices()
+    money=models.IntegerField()
 
     def __str__(self):
         return self.name
