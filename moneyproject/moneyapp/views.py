@@ -3,7 +3,25 @@ from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
 
-class PaymentType(views.View):
+
+
+class UserCreateView(views.View):
+    form_class = UserForm
+    
+    def get(self, request):
+        form = self.form_class()
+        return render(request, {'form':form})
+    
+    def post(self, request):
+        form = self.form_class()
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            return redirect('')
+        
+
+
+class PaymentTypeView(views.View):
     form_class = PaymentTypeForm
     
     def get(self, request):
@@ -16,11 +34,11 @@ class PaymentType(views.View):
             payment_type = form.save(commit=False)
             payment_type.user = request.user
             payment_type.save()
-            return redirect('')
+            return redirect('payment')
         else:
-            return render(request,{'form': form} )
+            return render(request, {'form': form} )
         
-class BalanceCreate(views.View):
+class BalanceCreateView(views.View):
     form_class = BalanceForm
     
     def get(self, request):
@@ -33,9 +51,9 @@ class BalanceCreate(views.View):
             expense = form.save(commit=False)
             expense.user = request.user
             expense.save()
-            return redirect('')
+            return redirect('balance')
         else:
-            return render(request, self.template_name, {"form": form})
+            return render(request, {"form": form})
         
         
 class ExpenseCreateView(views.View):
@@ -51,7 +69,7 @@ class ExpenseCreateView(views.View):
             expense = form.save(commit=False)
             expense.user = request.user
             expense.save()
-            return redirect('')
+            return redirect('expense')
         else:
             return render(request, {"form": form})
 
@@ -68,7 +86,25 @@ class CreditCreateView(views.View):
             credit = form.save(commit=False)
             credit.user = request.user
             credit.save()
-            return redirect('credit-list')
+            return redirect('credit')
         else:
             return render(request, {"form": form})
-        
+
+
+class CategoryView(views.View):
+    form_class = CategoryForm
+    
+    def get(self, request):
+        form = self.form_class()
+        return render(request, {'form': form})
+    
+    
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.user = request.user
+            category.save()
+            return redirect('category')
+        else:
+            return render(request, {'form': form})
