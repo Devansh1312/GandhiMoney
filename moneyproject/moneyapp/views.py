@@ -10,7 +10,7 @@ class UserCreateView(views.View):
     
     def get(self, request):
         form = self.form_class()
-        return render(request, {'form':form})
+        return render(request,'index.html', {'form':form})
     
     def post(self, request):
         form = self.form_class()
@@ -26,7 +26,7 @@ class PaymentTypeView(views.View):
     
     def get(self, request):
         form = self.form_class()
-        return render(request, {'form':form})
+        return render(request,'index.html', {'form':form})
     
     def post(self, request):
         form = self.form_class()
@@ -36,14 +36,14 @@ class PaymentTypeView(views.View):
             payment_type.save()
             return redirect('payment')
         else:
-            return render(request, {'form': form} )
+            return render(request,'index.html', {'form': form} )
         
 class BalanceCreateView(views.View):
     form_class = BalanceForm
     
     def get(self, request):
         form = self.form_class()
-        return render(request, {'form':form})
+        return render(request,'index.html', {'form':form})
     
     def post(self, request):
         form = self.form_class(request.POST)
@@ -53,7 +53,7 @@ class BalanceCreateView(views.View):
             expense.save()
             return redirect('balance')
         else:
-            return render(request, {"form": form})
+            return render(request,'index.html', {"form": form})
         
         
 class ExpenseCreateView(views.View):
@@ -61,7 +61,7 @@ class ExpenseCreateView(views.View):
     
     def get(self, request):
         form = self.form_class()
-        return render(request, {"form": form})
+        return render(request, 'index.html',{"form": form})
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -71,14 +71,14 @@ class ExpenseCreateView(views.View):
             expense.save()
             return redirect('expense')
         else:
-            return render(request, {"form": form})
+            return render(request,'index.html', {"form": form})
 
 class CreditCreateView(views.View):
     form_class = CreditForm
 
     def get(self, request):
         form = self.form_class()
-        return render(request, {"form": form})
+        return render(request,'index.html', {"form": form})
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -88,7 +88,7 @@ class CreditCreateView(views.View):
             credit.save()
             return redirect('credit')
         else:
-            return render(request, {"form": form})
+            return render(request,'index.html',{"form": form})
 
 
 class CategoryView(views.View):
@@ -96,7 +96,7 @@ class CategoryView(views.View):
     
     def get(self, request):
         form = self.form_class()
-        return render(request, {'form': form})
+        return render(request,'index.html', {'form': form})
     
     
     def post(self, request):
@@ -107,4 +107,8 @@ class CategoryView(views.View):
             category.save()
             return redirect('category')
         else:
-            return render(request, {'form': form})
+            return render(request,'index.html', {'form': form})
+        
+        
+        
+        194761
