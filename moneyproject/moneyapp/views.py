@@ -8,39 +8,38 @@ from django.contrib import messages
 
 from django.contrib.auth import authenticate, login as auth_login
 
-def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # Automatically log the user in after signup
-            return redirect('login')  # Redirect to a home page or wherever you like
-    else:
-        form = SignUpForm()
-    return render(request, 'authentication/signup.html', {'form': form})
+# def signup(request):
+#     if request.method == 'POST':
+#         form = SignUpForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             login(request, user)  # Automatically log the user in after signup
+#             return redirect('login')  # Redirect to a home page or wherever you like
+#     else:
+#         form = SignUpForm()
+#     return render(request, 'authentication/signup.html', {'form': form})
 
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=password)
+# def user_login(request):
+#     if request.method == 'POST':
+#         form = LoginForm(request, data=request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data.get("user_name")
+#             password = form.cleaned_data.get("password")
+#             user = authenticate(username=username, password=password)
 
-            if user is not None:
-                if user.is_active:
-                    auth_login(request, user)
-                    return redirect("tables")  # Redirect to a different view
-                else:
-                    messages.warning(request, "User is not active.")
-            else:
-                messages.error(request, "Invalid credentials")
-        else:
-            messages.error(request, "Invalid credentials")
-    else:
-        form = LoginForm()
-    return render(request, 'authentication/login.html', {'form': form})
-
+#             if user is not None:
+#                 if user.is_active:
+#                     auth_login(request, user)  # Use auth_login here
+#                     return redirect("table")  # Redirect to the appropriate view
+#                 else:
+#                     messages.warning(request, "User is not active.")
+#             else:
+#                 messages.error(request, "Invalid credentials")
+#         else:
+#             messages.error(request, "Invalid credentials")
+#     else:
+#         form = LoginForm()
+#     return render(request, 'authentication/login.html', {'form': form})
  # Redirect to login page after logout
             
 class UserCreateView(views.View):
