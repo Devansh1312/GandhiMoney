@@ -26,7 +26,7 @@ class PaymentTypeView(views.View):
     
     def get(self, request):
         form = self.form_class()
-        return render(request,'index.html', {'form':form})
+        return render(request,'billing.html', {'form':form})
     
     def post(self, request):
         form = self.form_class()
@@ -36,7 +36,7 @@ class PaymentTypeView(views.View):
             payment_type.save()
             return redirect('payment')
         else:
-            return render(request,'index.html', {'form': form} )
+            return render(request,'billing.html', {'form': form} )
         
 class BalanceCreateView(views.View):
     form_class = BalanceForm
