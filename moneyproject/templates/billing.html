@@ -13,17 +13,17 @@
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
 {% load static %}
 
 {% block content %}
   
 
 <body class="g-sidenav-show  bg-gray-200">
- {% include "sidebar.html" %}
+
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-   {% include "navbar.html" %}
+   
     <!-- End Navbar -->
     
 <div class="container-fluid py-4">
@@ -395,6 +395,7 @@
             }, 10);
         }
 
+        
         animateCounter('state1');
         animateCounter('state2');
         animateCounter('card1'); 

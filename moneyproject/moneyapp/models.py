@@ -123,7 +123,7 @@ class Category(models.Model):
 class Expense(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    paymenttype = models.ForeignKey(PaymentType, on_delete=models.CASCADE)
+    payment_mode = models.ForeignKey(PaymentType, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     date_created = models.DateTimeField(default=timezone.now)
     money = models.IntegerField()
@@ -135,8 +135,9 @@ class Expense(models.Model):
 class Balance(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     payment_mode = models.ForeignKey(PaymentType,on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
     money=models.IntegerField()
+    date_updated = models.DateTimeField(default=timezone.now)
+
 
     def __str__(self):
         return self.name
@@ -144,8 +145,10 @@ class Balance(models.Model):
 class Credit(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     payment_mode = models.ForeignKey(PaymentType,on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
     money=models.IntegerField()
+    date_created = models.DateTimeField(default=timezone.now)
+    
 
     def __str__(self):
         return self.name

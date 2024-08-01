@@ -4,10 +4,13 @@ from .views import *
 
 urlpatterns = [
     
-    path('test/',PaymentTypeView.as_view(),name="payment"),
-    path('a',BalanceCreateView.as_view(),name="balance"),
-    path('s',ExpenseCreateView.as_view(),name="expense"),
-    path('e',CreditCreateView.as_view(),name="credit"),
-    path('dh',CategoryView.as_view(),name="category"),
+    path('payment/',PaymentTypeView.as_view(),name="payment"),
+    path('balance/',BalanceCreateView.as_view(),name="balance"),
+    path('expense/',ExpenseCreateView.as_view(),name="expense"),
+    path('credit/',CreditCreateView.as_view(),name="credit"),
+    path('category/',CategoryView.as_view(),name="category"),
+
+    path('table/',TableView.as_view(),name="table"),
+
 
 ]

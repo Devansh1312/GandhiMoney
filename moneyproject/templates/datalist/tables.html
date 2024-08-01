@@ -1,0 +1,118 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %}
+<body class="g-sidenav-show bg-gray-200">
+    {% include "includes/sidebar.html" %}
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+        <!-- Navbar -->
+        {% include "includes/navbar.html" %}
+        <!-- End Navbar -->
+
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="card h-100 mb-4">
+                            <div class="card-header pb-0 px-3">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="mb-0">Your Transactions</h6>
+                                    </div>
+                                    <div class="col-md-6 d-flex justify-content-start justify-content-md-end align-items-center">
+                                        <i class="material-icons me-2 text-lg">date_range</i>
+                                        <input type="date" id="date-picker" value="{{ selected_date }}" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pt-4 p-3">
+                                <h6 class="text-uppercase text-body text-xs font-weight-bolder mb-3">Newest</h6>
+                                <ul class="list-group">
+                                    {% for credit in credits %}
+                                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                        <div class="d-flex align-items-center">
+                                            <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center">
+                                                <i class="material-icons text-lg">expand_less</i>
+                                            </button>
+                                            <div class="d-flex flex-column">
+                                                <h6 class="mb-1 text-dark text-sm">{{ credit.name }}</h6>
+                                                <span class="text-xs">{{ credit.payment_mode }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
+                                            + $ {{ credit.money }}
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                    {% for expense in expenses %}
+                                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                        <div class="d-flex align-items-center">
+                                            <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center">
+                                                <i class="material-icons text-lg">expand_more</i>
+                                            </button>
+                                            <div class="d-flex flex-column">
+                                                <h6 class="mb-1 text-dark text-sm">{{ expense.title }}</h6>
+                                                <span class="text-xs">{{ expense.paymenttype }}&nbsp;----&nbsp;{{ expense.category }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold">
+                                            - $ {{ expense.money }}
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer py-4">
+            <div class="container-fluid">
+                <div class="row align-items-center justify-content-lg-between">
+                    <div class="col-lg-6 mb-lg-0 mb-4">
+                        <div class="copyright text-center text-sm text-muted text-lg-start">
+                            © <script>document.write(new Date().getFullYear())</script>,
+                            made with <i class="fa fa-heart"></i> by
+                            <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
+                            for a better web.
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                            <li class="nav-item">
+                                <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://www.creative-tim.com/blog" class="nav-link text-muted" target="_blank">Blog</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script>
+        document.getElementById('date-picker').addEventListener('change', function() {
+            const selectedDate = this.value;
+            document.cookie = `selected_date=${selectedDate}; path=/`;
+            location.reload(); // Reload the page to apply the filter
+        });
+
+        // Load the selected date from cookies
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        document.getElementById('date-picker').value = getCookie('selected_date') || '{{ selected_date }}';
+    </script>
+{% endblock content %}
