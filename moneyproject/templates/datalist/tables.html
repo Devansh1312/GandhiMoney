@@ -35,7 +35,7 @@
                                                 <i class="material-icons text-lg">expand_less</i>
                                             </button>
                                             <div class="d-flex flex-column">
-                                                <h6 class="mb-1 text-dark text-sm">{{ credit.name }}</h6>
+                                                <h6 class="mb-1 text-dark text-sm">{{ credit.description }}</h6>
                                                 <span class="text-xs">{{ credit.payment_mode }}</span>
                                             </div>
                                         </div>
@@ -52,7 +52,7 @@
                                             </button>
                                             <div class="d-flex flex-column">
                                                 <h6 class="mb-1 text-dark text-sm">{{ expense.title }}</h6>
-                                                <span class="text-xs">{{ expense.paymenttype }}&nbsp;----&nbsp;{{ expense.category }}</span>
+                                                <span class="text-xs">{{ expense.payment_mode }}&nbsp;----&nbsp;{{ expense.category }}</span>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold">
@@ -63,6 +63,48 @@
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <!-- Overall Balance Card -->
+                    <div class="card bg-transparent shadow-xl mb-4">
+                        <div class="overflow-hidden position-relative border-radius-xl">
+                            <img src="{% static 'assets/img/illustrations/pattern-tree.svg' %}" class="position-absolute opacity-2 start-0 top-0 w-100 z-index-1 h-100" alt="pattern-tree">
+                            <span class="mask bg-gradient-dark opacity-10"></span>
+                            <div class="card-body position-relative z-index-1 p-3">
+                                <h4 class="text-white mt-4 mb-5 pb-2">Overall Balance</h4>
+                                <h5 class="text-white mt-4 mb-5 pb-2">{{ total_balance_overall }}</h5>
+                                <div class="ms-auto w-20 d-flex align-items-end justify-content-end">
+                                    <img class="w-60 mt-2" src="{% static 'assets/img/logos/mastercard.png' %}" alt="logo">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method Cards -->
+                    <div class="row">
+                        {% for mode, total in totals_by_mode.items %}
+                        <div class="col-md-6 col-12 mb-4">
+                            <div class="card">
+                                <div class="card-header mx-4 p-3 text-center">
+                                    <div class="icon icon-shape icon-lg bg-gradient-primary shadow text-center border-radius-lg">
+                                        <i class="material-icons opacity-10">account_balance</i>
+                                    </div>
+                                </div>
+                                <div class="card-body pt-0 p-3 text-center">
+                                    <h6 class="text-center mb-0">{{ mode|capfirst }}</h6>
+                                    <hr class="horizontal dark my-3">
+                                    <h5 class="mb-0">
+                                        {% if total >= 0 %}
+                                            +${{ total }}
+                                        {% else %}
+                                            ${{ total|slice:":-1" }} <!-- Remove leading minus sign for negative values -->
+                                        {% endif %}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -99,20 +141,12 @@
             </div>
         </footer>
     </main>
+
     <script>
         document.getElementById('date-picker').addEventListener('change', function() {
-            const selectedDate = this.value;
-            document.cookie = `selected_date=${selectedDate}; path=/`;
-            location.reload(); // Reload the page to apply the filter
+            document.cookie = "selected_date=" + this.value + "; path=/";
+            window.location.reload();
         });
-
-        // Load the selected date from cookies
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
-
-        document.getElementById('date-picker').value = getCookie('selected_date') || '{{ selected_date }}';
     </script>
-{% endblock content %}
+</body>
+{% endblock %}

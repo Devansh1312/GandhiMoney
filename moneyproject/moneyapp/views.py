@@ -3,22 +3,60 @@ from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
 from django.utils.timezone import now
+from django.contrib.auth import authenticate, login,logout
+from django.contrib import messages
 
+from django.contrib.auth import authenticate, login as auth_login
 
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Automatically log the user in after signup
+            return redirect('login')  # Redirect to a home page or wherever you like
+    else:
+        form = SignUpForm()
+    return render(request, 'authentication/signup.html', {'form': form})
 
+def user_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                if user.is_active:
+                    auth_login(request, user)
+                    return redirect("tables")  # Redirect to a different view
+                else:
+                    messages.warning(request, "User is not active.")
+            else:
+                messages.error(request, "Invalid credentials")
+        else:
+            messages.error(request, "Invalid credentials")
+    else:
+        form = LoginForm()
+    return render(request, 'authentication/login.html', {'form': form})
+
+ # Redirect to login page after logout
+            
 class UserCreateView(views.View):
     form_class = UserForm
     
     def get(self, request):
         form = self.form_class()
-        return render(request,'index.html', {'form':form})
+        return render(request,'authentication/register.html', {'form':form})
     
     def post(self, request):
         form = self.form_class()
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
-            return redirect('')
+            return redirect('login')
+        return render(request,'authentication/register.html', {'form':form})
         
 
 
@@ -120,17 +158,45 @@ class CategoryView(views.View):
         
         
       
-
+from django.utils.timezone import now
 
 class TableView(views.View):
     def get(self, request):
         current_date = now().date()
         selected_date = request.COOKIES.get('selected_date', current_date)
+        
+        # Date-filtered transactions
         expenses = Expense.objects.filter(date_created__date=selected_date)
         credits = Credit.objects.filter(date_created__date=selected_date)
+        
+        # Total credits and expenses based on selected date
+        total_credits_date = sum(credit.money for credit in credits)
+        total_expenses_date = sum(expense.money for expense in expenses)
+        total_balance_date = total_credits_date - total_expenses_date
+
+        # Overall balance calculation (for all dates)
+        all_expenses = Expense.objects.all()
+        all_credits = Credit.objects.all()
+        
+        total_credits_overall = sum(credit.money for credit in all_credits)
+        total_expenses_overall = sum(expense.money for expense in all_expenses)
+        total_balance_overall = total_credits_overall - total_expenses_overall
+
+        # Calculate totals per payment mode (overall)
+        payment_modes = set(credit.payment_mode.name for credit in all_credits) | set(expense.payment_mode.name for expense in all_expenses)
+        totals_by_mode = {}
+        for mode in payment_modes:
+            total_credits_mode = sum(credit.money for credit in all_credits if credit.payment_mode.name == mode)
+            total_expenses_mode = sum(expense.money for expense in all_expenses if expense.payment_mode.name == mode)
+            totals_by_mode[mode] = total_credits_mode - total_expenses_mode
+
+        # Context for date-filtered transactions
         context = {
             'expenses': expenses,
             'credits': credits,
             'selected_date': selected_date,
+            'total_balance_date': total_balance_date,
+            'total_balance_overall': total_balance_overall,
+            'totals_by_mode': totals_by_mode,
         }
         return render(request, 'datalist/tables.html', context)
