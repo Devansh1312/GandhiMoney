@@ -42,6 +42,10 @@
                                         <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
                                             + $ {{ credit.money }}
                                         </div>
+                                        <form method="post" action="{% url 'delete_credit' credit.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm ms-3">Delete</button>
+                                        </form>
                                     </li>
                                     {% endfor %}
                                     {% for expense in expenses %}
@@ -58,6 +62,10 @@
                                         <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold">
                                             - $ {{ expense.money }}
                                         </div>
+                                        <form method="post" action="{% url 'delete_expense' expense.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm ms-3">Delete</button>
+                                        </form>
                                     </li>
                                     {% endfor %}
                                 </ul>

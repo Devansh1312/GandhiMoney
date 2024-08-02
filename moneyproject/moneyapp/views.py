@@ -1,5 +1,5 @@
 from django import views
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import *
 from .forms import *
 from django.utils.timezone import now
@@ -206,3 +206,17 @@ class TableView(views.View):
             'totals_by_mode': totals_by_mode,
         }
         return render(request, 'datalist/tables.html', context)
+    
+
+
+class DeleteCreditView(views.View):
+    def post(self, request, pk):
+        credit = get_object_or_404(Credit, pk=pk)
+        credit.delete()
+        return redirect('table')
+
+class DeleteExpenseView(views.View):
+    def post(self, request, pk):
+        expense = get_object_or_404(Expense, pk=pk)
+        expense.delete()
+        return redirect('table')
