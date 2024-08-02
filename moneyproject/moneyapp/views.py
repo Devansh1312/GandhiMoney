@@ -167,27 +167,34 @@ class TableView(views.View):
         # Date-filtered transactions
         expenses = Expense.objects.filter(date_created__date=selected_date)
         credits = Credit.objects.filter(date_created__date=selected_date)
+        balances=Balance.objects.filter(date_created__date=selected_date)
         
         # Total credits and expenses based on selected date
         total_credits_date = sum(credit.money for credit in credits)
         total_expenses_date = sum(expense.money for expense in expenses)
-        total_balance_date = total_credits_date - total_expenses_date
+        total_balance =sum(balance.money for balance in balances)
+        total_balance_date =  total_balance+(total_credits_date - total_expenses_date)
 
         # Overall balance calculation (for all dates)
         all_expenses = Expense.objects.all()
         all_credits = Credit.objects.all()
+        all_balances = Balance.objects.all()
         
         total_credits_overall = sum(credit.money for credit in all_credits)
         total_expenses_overall = sum(expense.money for expense in all_expenses)
-        total_balance_overall = total_credits_overall - total_expenses_overall
+        total_balance_overall =sum(balance.money for balance in all_balances)
+
+        total_balance_overall =total_balance_overall+(total_credits_overall - total_expenses_overall)
 
         # Calculate totals per payment mode (overall)
-        payment_modes = set(credit.payment_mode.name for credit in all_credits) | set(expense.payment_mode.name for expense in all_expenses)
+        payment_modes = set(credit.payment_mode.name for credit in all_credits) | set(expense.payment_mode.name for expense in all_expenses) | set(balance.payment_mode.name for balance in all_balances)
         totals_by_mode = {}
         for mode in payment_modes:
             total_credits_mode = sum(credit.money for credit in all_credits if credit.payment_mode.name == mode)
             total_expenses_mode = sum(expense.money for expense in all_expenses if expense.payment_mode.name == mode)
-            totals_by_mode[mode] = total_credits_mode - total_expenses_mode
+            total_balances_mode = sum(balance.money for balance in all_balances if balance.payment_mode.name == mode)
+
+            totals_by_mode[mode] = total_balances_mode+(total_credits_mode - total_expenses_mode)
 
         # Context for date-filtered transactions
         context = {
