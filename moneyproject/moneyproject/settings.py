@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'moneyapp.middleware.AdminOnlyMiddleware',
 ]
 
 ROOT_URLCONF = 'moneyproject.urls'
@@ -77,13 +78,13 @@ WSGI_APPLICATION = 'moneyproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'gandhimoney',
+        'NAME': 'money',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306'
     }
-}
+} 
 
 
 # Password validation

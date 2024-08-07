@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.forms.widgets import DateInput
 from .models import *
 
 # User registration form
@@ -20,28 +21,46 @@ class LoginForm(AuthenticationForm):
 class ExpenseForm(forms.ModelForm):
     class Meta:
         model = Expense
-        fields = ('category', 'payment_mode', 'money', 'date_created')
-
+        fields = ('category', 'account', 'money', 'date_created')
+        labels = {
+            'date_created': 'Date',
+            'money': 'Amount'
+        }
+        widgets = {
+            'date_created': DateInput(attrs={'class': 'form-control datepicker', 'placeholder': 'Select date'}),
+        }
+        
+        
 # Credit form
 class CreditForm(forms.ModelForm):
     class Meta:
         model = Credit
-        fields = ('payment_mode', 'money', 'date_created')
+        fields = ('account', 'money', 'date_created')
 
 # Balance form
 class BalanceForm(forms.ModelForm):
     class Meta:
         model = Balance
-        fields = ('payment_mode', 'money', 'date_created')
+        fields = ('account', 'money', 'date_created')
+        labels = {
+            'money': 'Amount'
+        }
 
 # PaymentType form
 class PaymentTypeForm(forms.ModelForm):
     class Meta:
         model = PaymentType
         fields = ('name',)
+        
 
 # Category form
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ('name',)
+        labels = {
+            'name': 'Category',  
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Enter category here'}),
+        }
